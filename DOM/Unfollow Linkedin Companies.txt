@@ -1,0 +1,44 @@
+/* 
+1) Login to Linkedin and go to companies section (view all)
+2) Open dev tools : F12  OR
+		(right click -> inspect )*/
+3)Paste the and run the following code:
+
+// Scroll function to load all followed companies
+function scrollToEnd(callback) {
+    let distance = 1000;
+    let interval = setInterval(() => {
+        window.scrollBy(0, distance);
+        let scrollHeight = document.documentElement.scrollHeight;
+        let scrollTop = window.pageYOffset;
+        let windowHeight = window.innerHeight;
+
+        if (scrollTop + windowHeight >= scrollHeight) {
+            clearInterval(interval);
+            callback();
+        }
+    }, 1000);
+}
+
+// Function to unfollow companies after scrolling has completed
+function unfollowAllCompanies() {
+    // Select all buttons with class 'artdeco-button' and text content 'Following'
+    let unfollowButtons = Array.from(document.querySelectorAll('button.artdeco-button')).filter(button => 
+        button.innerText.includes("Following")
+    );
+
+    if (unfollowButtons.length === 0) {
+        console.log("No companies found to unfollow.");
+        return;
+    }
+
+    unfollowButtons.forEach((button, index) => {
+        setTimeout(() => {
+            button.click();
+            console.log(`Unfollowed company ${index + 1}`);
+        }, index * 1000); // Delay to avoid rate-limiting
+    });
+}
+
+// Scroll to the bottom of the page and then unfollow all companies
+scrollToEnd(unfollowAllCompanies);
